@@ -1,0 +1,159 @@
+<!--GUI for Breast Cancer Detection Application using SVM-->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <title>Breast Cancer Detection</title>
+  <style>
+    /*just bg and body style*/
+    body {
+      margin: 40px;
+      background-color: #808080;
+      background-image: linear-gradient(315deg, #de5499 19%, #a0c5ba 85%);
+    }
+
+    .container {
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .btn-container {
+      background: white;
+      box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    .head {
+      font-weight: bolder;
+    }
+
+    .btn-primary {
+      border-color: #ff33f !important;
+      color: #ffffff;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+      background-color: #de5499 !important;
+      border-color: #de5499 !important;
+      padding: 5px;
+    }
+
+    label {
+      width: 50%;
+    }
+
+    #predict {
+      display: none;
+    }
+
+    .form-group {
+      padding: 2px;
+    }
+  </style>
+  <!--Font Awesome-->
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="head">Breast Cancer Detection</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="btn-container">
+
+          <!-- Main Input For Receiving Query to our ML -->
+          <form action="{{ url_for('predict')}}" method="post" class="form-inline">
+            <div class="row">
+              <div class="col-md-6">
+                <img class="image" src="{{url_for('static', filename='cancer_image.jpg')}}" width="100%" height="100%" />
+              </div>
+              <div class="col-md-6">
+                <div class="container">
+                  <h4>Enter Cell Details</h4>
+                  <div class="form-group">
+                    <label for="Age">Age</label>
+                    <input type="text" class="form-control" name="Age" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="Race">Race</label>
+                    <input type="text" class="form-control" name="Race" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="Marital Status">Marital Status</label>
+                    <input type="text" class="form-control" name="Marital Status" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="T Stage ">T Stage </label>
+                    <input type="text" class="form-control" name="T Stage " required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="N Stage">N Stage</label>
+                    <input type="text" class="form-control" name="N Stage" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="6th Stage">6th Stage</label>
+                    <input type="text" class="form-control" name="6th Stage" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="differentiate">differentiate</label>
+                    <input type="text" class="form-control" name="differentiate" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="Grade">Grade</label>
+                    <input type="text" class="form-control" name="Grade" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="A Stage">A Stage</label>
+                    <input type="text" class="form-control" name="A Stage" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="Tumor Size">Tumor Size</label>
+                    <input type="text" class="form-control" name="Tumor Size" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="Estrogen Status">Estrogen Status</label>
+                    <input type="text" class="form-control" name="Estrogen Status" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="Progesterone Status">Progesterone Status</label>
+                    <input type="text" class="form-control" name="Progesterone Status" required="required" />
+                  </div>
+                  <div class="form-group">
+                    <label for="Regional Node Examined">Regional Node Examined</label>
+                    <input type="text" class="form-control" name="Regional Node Examined" required="required" />
+                  </div>                  
+                  <div class="form-group">
+                    <label for="Reginol Node Positive">Reginol Node Positive</label>
+                    <input type="text" class="form-control" name="Reginol Node Positive" required="required" />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="Survival Months">Survival Months</label>
+                    <input type="text" class="form-control" name="Survival Months" required="required" />
+                  </div>                  
+                  <button type="submit" class="btn btn-primary btn-lg">Status</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        <br />
+        <center>
+          <h1 style="background:#de5499">{{prediction_text}}</h1>
+        </center>
+        <br />
+</body>
+
+</html>
